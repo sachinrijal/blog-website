@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h3 class="text-uppercase text-warning" style="letter-spacing: 2px;">keyword -- {{ key }}</h3>
+<main role="main" class="container p-0">
+  <div class="row">
+    <div class="col-md-8 blog-main">
+      {% for post in posts %}
+        <div class="card border-0" >
+          <div class="card-body">
+            <h3><a href="{% url 'blog' post.slug %}">{{ post.title }}</a></h3>
+            <small class="mb-1 text-muted">{{ post.created_at|timesince }} ago | {{ post.author }}</small>
+            <p class="card-text">{{ post.short_body|truncatewords:50  }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+</main>
+               
+
+{% endblock %}

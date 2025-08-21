@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="row">
+
+<!-- left sidebar  -->
+    {% include 'dashboard/leftside_bar.html' %}
+<!-- finish  -->
+
+    <div class="col-md-9">
+        <h3>Do yo want to delete this category ? </h3>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Yes" class="btn btn-success" name="action">
+            <input type="submit" value="No" class="btn btn-danger" name="action">
+        </form>
+    </div>
+
+
+</div>
+
+
+{% endblock content %}
