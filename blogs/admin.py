@@ -10,7 +10,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class blogsadmin(admin.ModelAdmin):
     list_display = ['id','title','is_featured','status','category']
     search_fields = ['title','id','status','category__name']
-    prepopulated_fields = {'slug':('title',)}
+    # prepopulated_fields = {'slug':('title',)}
     list_editable = ['is_featured']
 
 admin.site.register(Category,CategoryAdmin)

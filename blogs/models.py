@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -37,6 +38,19 @@ class Blogs(models.Model):
 
     class Meta:
         verbose_name_plural = 'blogs'
+    
 
     def __str__(self):
         return self.title[0:10]
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            # make unique slug if title already exists
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Blogs.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
