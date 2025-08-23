@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from blogs.forms import UserForm
-from .models import Blogs,Category
+from .models import Blogs,Category,Comment
 from django.db.models import Q
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -35,9 +35,12 @@ def category(request,id):
 
 def blog(request,slug):
     posts = get_object_or_404(Blogs,slug=slug,status=1)
+    # comments 
+    comments = Comment.objects.filter(post=posts)
     
     context ={
         'post':posts,
+        'comments':comments,
     }
     return render(request,'blogs/blog.html',context)
 
@@ -56,7 +59,6 @@ def register(request):
         form = UserForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = user.username.lower()
             user.save()
             return redirect('home')
 

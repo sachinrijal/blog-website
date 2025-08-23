@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from blogs.models import Category,Blogs
 from django.contrib.auth.decorators import login_required
-from . forms import categoryform,postform
+from . forms import categoryform,postform,Userform,Editform
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -106,6 +107,45 @@ def post_edit(request,id):
         'form':form
     }
     return render(request,'dashboard/post_edit.html', context)
+
+def users(request):
+    users = User.objects.all()
+    context = {
+        'users':users
+    }
+    return render(request,'dashboard/user.html',context)
+
+
+def user_add(request):
+    form = Userform()
+    if request.method == "POST":
+        form = Userform(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+        
+    context = {
+        'form':form,
+    }
+    return render(request,'dashboard/user_add.html',context)
+
+def user_edit(request,id):
+    user = get_object_or_404(User,id=id)
+    form = Editform(instance=user)
+    if request.method == "POST":
+        form = Editform(request.POST,instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+    context = {
+        'form':form
+    }
+    return render(request,'dashboard/user_edit.html',context)
+
+def user_delete(request,id):
+    user = get_object_or_404(User,id=id)
+    user.delete()
+    return redirect('users')
 
 
 
