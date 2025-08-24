@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from blogs.forms import UserForm
@@ -37,10 +37,26 @@ def blog(request,slug):
     posts = get_object_or_404(Blogs,slug=slug,status=1)
     # comments 
     comments = Comment.objects.filter(post=posts)
+    comments_count = comments.count()
+
+    if request.method == "POST":
+        comment = request.POST.get('comment')
+        user = request.user
+        post = posts
+
+        Comment.objects.create(
+                user = user,
+                comment = comment,
+                post = post,
+                )
+        
+        return HttpResponseRedirect(request.path_info)
+
     
     context ={
         'post':posts,
         'comments':comments,
+        'comments_count':comments_count
     }
     return render(request,'blogs/blog.html',context)
 
